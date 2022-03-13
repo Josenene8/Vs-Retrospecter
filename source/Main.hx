@@ -1,4 +1,4 @@
-ckage;
+package;
 
 import openfl.display.BlendMode;
 import openfl.text.TextFormat;
