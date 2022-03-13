@@ -706,7 +706,7 @@ class PlayState extends MusicBeatState
 						if (SONG.song == 'Spectral' || SONG.song == 'Ectospasm')
 						{
 							// Darken the background
-							spectralDarkScreen:FlxSprite = new FlxSprite(-1000, -1500).makeGraphic(4000, 3000, FlxColor.BLACK);
+							var spectralDarkScreen:FlxSprite = new FlxSprite(-1000, -1500).makeGraphic(4000, 3000, FlxColor.BLACK);
 							spectralDarkScreen.active = false;
 							spectralDarkScreen.alpha = 0;
 							add(spectralDarkScreen);
@@ -781,7 +781,7 @@ class PlayState extends MusicBeatState
 							// SakuBop
 							if ((SONG.song == 'Spectral' || SONG.song == 'Ectospasm') && gfCharacter != 'sakuroma')
 							{
-								sakuBop = new FlxSprite(0, 0);
+								var sakuBop:FlxSprite = new FlxSprite(0, 0);
 								if (FlxG.save.data.cacheImages)
 								{
 									sakuBop.frames = FileCache.instance.fromSparrow('wrath_saku', 'SakuBop');
@@ -875,7 +875,7 @@ class PlayState extends MusicBeatState
 
 						if (FlxG.save.data.flashing && isStoryMode && (SONG.song == 'Spectral'))
 						{
-							bgFlash = new FlxSprite(-1250, -100).makeGraphic(3000, 1000);
+							bgFlash:FlxSprite = new FlxSprite(-1250, -100).makeGraphic(3000, 1000);
 							bgFlash.active = false;
 							bgFlash.visible = false;
 							add(bgFlash);
@@ -941,7 +941,7 @@ class PlayState extends MusicBeatState
 							if (FlxG.save.data.flashing)
 							{
 								// wrath_ground
-								groundGreen = new FlxSprite(0, 0);
+								var groundGreen:FlxSprite = new FlxSprite(0, 0);
 								if (FlxG.save.data.cacheImages)
 								{
 									groundGreen.frames = FileCache.instance.fromSparrow('wrath_ground', 'ground');
@@ -965,7 +965,7 @@ class PlayState extends MusicBeatState
 							}
 
 							// wrath_crack
-							crack = new FlxSprite(0, 0);
+							var crack:FlxSprite = new FlxSprite(0, 0);
 							if (FlxG.save.data.cacheImages)
 							{
 								crack.frames = FileCache.instance.fromSparrow('wrath_crack', 'HellCrack');
@@ -986,7 +986,7 @@ class PlayState extends MusicBeatState
 						}
 
 						// wrath_rocks
-						rocks = new FlxSprite(0, 0);
+						var rocks:FlxSprite = new FlxSprite(0, 0);
 						if (FlxG.save.data.cacheImages)
 						{
 							rocks.frames = FileCache.instance.fromSparrow('wrath_frontRocks', 'frontRocks');
@@ -1010,7 +1010,7 @@ class PlayState extends MusicBeatState
 						if (FlxG.save.data.flashing && (SONG.song == 'Spectral' || SONG.song == 'Ectospasm'))
 						{
 							// wrath_rocks
-							rocksGreen = new FlxSprite(0, 0);
+							var rocksGreen:FlxSprite = new FlxSprite(0, 0);
 							if (FlxG.save.data.cacheImages)
 							{
 								rocksGreen.frames = FileCache.instance.fromSparrow('wrath_frontRocks', 'frontRocks');
