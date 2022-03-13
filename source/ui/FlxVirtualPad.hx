@@ -62,10 +62,10 @@ class FlxVirtualPad extends FlxSpriteGroup
 		if (Action == null)
 			Action = A_B_C;
 
-		dPad = new FlxSpriteGroup();
+		var dPad = new FlxSpriteGroup();
 		dPad.scrollFactor.set();
 
-		actions = new FlxSpriteGroup();
+		var actions = new FlxSpriteGroup();
 		actions.scrollFactor.set();
 
 		switch (DPad)
