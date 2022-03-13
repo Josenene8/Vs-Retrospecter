@@ -191,7 +191,7 @@ class TitleState extends MusicBeatState
 		// logoBl.color = FlxColor.BLACK;
 		add(logoBl);
 
-		part1 = new FlxSprite(0, 0);
+		part1:FlxSprite = new FlxSprite(0, 0);
 		part1.loadGraphic(Paths.image('Part_1', 'preload'));
 		part1.antialiasing = FlxG.save.data.antialiasing;
 		part1.scale.set(0.2, 0.2);
