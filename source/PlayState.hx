@@ -875,7 +875,7 @@ class PlayState extends MusicBeatState
 
 						if (FlxG.save.data.flashing && isStoryMode && (SONG.song == 'Spectral'))
 						{
-							bgFlash:FlxSprite = new FlxSprite(-1250, -100).makeGraphic(3000, 1000);
+							var bgFlash:FlxSprite = new FlxSprite(-1250, -100).makeGraphic(3000, 1000);
 							bgFlash.active = false;
 							bgFlash.visible = false;
 							add(bgFlash);
