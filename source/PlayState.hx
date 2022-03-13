@@ -706,7 +706,7 @@ class PlayState extends MusicBeatState
 						if (SONG.song == 'Spectral' || SONG.song == 'Ectospasm')
 						{
 							// Darken the background
-							spectralDarkScreen = new FlxSprite(-1000, -1500).makeGraphic(4000, 3000, FlxColor.BLACK);
+							spectralDarkScreen:FlxSprite = new FlxSprite(-1000, -1500).makeGraphic(4000, 3000, FlxColor.BLACK);
 							spectralDarkScreen.active = false;
 							spectralDarkScreen.alpha = 0;
 							add(spectralDarkScreen);
