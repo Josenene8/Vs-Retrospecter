@@ -60,12 +60,6 @@ class OptionsMenu extends MusicBeatState
 			grpControls.add(controlLabel);
 			// DONT PUT X IN THE FIRST PARAMETER OF new ALPHABET() !!
 		}
-
-		#if mobileC
-		addVirtualPad(UP_DOWN, A_B);
-		#end
-		
-		super.create();
 	}
 
 	override function update(elapsed:Float)
