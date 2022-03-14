@@ -1,41 +1,23 @@
-
 package;
 
-import flixel.input.keyboard.FlxKey;
-import haxe.Exception;
-import openfl.geom.Matrix;
-import openfl.display.BitmapData;
-import openfl.utils.AssetType;
-import lime.graphics.Image;
-import flixel.graphics.FlxGraphic;
-import openfl.utils.AssetManifest;
-import openfl.utils.AssetLibrary;
-import flixel.system.FlxAssets;
 
-import lime.app.Application;
-import lime.media.AudioContext;
-import lime.media.AudioManager;
-import openfl.Lib;
+import ChromaticAberrationShader;
+import Note.NoteType;
+import Replay.Ana;
+import Replay.Analysis;
 import Section.SwagSection;
 import Song.SwagSong;
-import WiggleEffect.WiggleEffectType;
 import flixel.FlxBasic;
 import flixel.FlxCamera;
 import flixel.FlxG;
-import flixel.FlxGame;
 import flixel.FlxObject;
 import flixel.FlxSprite;
-import flixel.FlxState;
 import flixel.FlxSubState;
-import flixel.addons.display.FlxGridOverlay;
-import flixel.addons.effects.FlxTrail;
-import flixel.addons.effects.FlxTrailArea;
-import flixel.addons.effects.chainable.FlxEffectSprite;
-import flixel.addons.effects.chainable.FlxWaveEffect;
+import flixel.addons.text.FlxTypeText;
 import flixel.addons.transition.FlxTransitionableState;
-import flixel.graphics.atlas.FlxAtlas;
-import flixel.graphics.frames.FlxAtlasFrames;
+import flixel.effects.particles.FlxEmitter;
 import flixel.group.FlxGroup.FlxTypedGroup;
+import flixel.input.keyboard.FlxKey;
 import flixel.math.FlxMath;
 import flixel.math.FlxPoint;
 import flixel.math.FlxRect;
@@ -44,23 +26,15 @@ import flixel.text.FlxText;
 import flixel.tweens.FlxEase;
 import flixel.tweens.FlxTween;
 import flixel.ui.FlxBar;
-import flixel.util.FlxCollision;
 import flixel.util.FlxColor;
 import flixel.util.FlxSort;
-import flixel.util.FlxStringUtil;
 import flixel.util.FlxTimer;
-import haxe.Json;
-import lime.utils.Assets;
+import lime.app.Application;
+import openfl.Lib;
 import openfl.display.BlendMode;
-import openfl.display.StageQuality;
-import openfl.filters.ShaderFilter;
-import Sys;
-import sys.FileSystem;
-import openfl.Assets;
-import sys.io.File;
-#if mobileC
-import ui.Mobilecontrols;
-#end
+import openfl.events.KeyboardEvent;
+import openfl.media.Sound;
+import openfl.ui.Keyboard;
 
 using StringTools;
 #if sys
@@ -732,7 +706,7 @@ class PlayState extends MusicBeatState
 						if (SONG.song == 'Spectral' || SONG.song == 'Ectospasm')
 						{
 							// Darken the background
-							var spectralDarkScreen:FlxSprite = new FlxSprite(-1000, -1500).makeGraphic(4000, 3000, FlxColor.BLACK);
+							spectralDarkScreen = new FlxSprite(-1000, -1500).makeGraphic(4000, 3000, FlxColor.BLACK);
 							spectralDarkScreen.active = false;
 							spectralDarkScreen.alpha = 0;
 							add(spectralDarkScreen);
@@ -807,7 +781,7 @@ class PlayState extends MusicBeatState
 							// SakuBop
 							if ((SONG.song == 'Spectral' || SONG.song == 'Ectospasm') && gfCharacter != 'sakuroma')
 							{
-								var sakuBop:FlxSprite = new FlxSprite(0, 0);
+								sakuBop = new FlxSprite(0, 0);
 								if (FlxG.save.data.cacheImages)
 								{
 									sakuBop.frames = FileCache.instance.fromSparrow('wrath_saku', 'SakuBop');
@@ -901,7 +875,7 @@ class PlayState extends MusicBeatState
 
 						if (FlxG.save.data.flashing && isStoryMode && (SONG.song == 'Spectral'))
 						{
-							var bgFlash:FlxSprite = new FlxSprite(-1250, -100).makeGraphic(3000, 1000);
+							bgFlash = new FlxSprite(-1250, -100).makeGraphic(3000, 1000);
 							bgFlash.active = false;
 							bgFlash.visible = false;
 							add(bgFlash);
@@ -967,7 +941,7 @@ class PlayState extends MusicBeatState
 							if (FlxG.save.data.flashing)
 							{
 								// wrath_ground
-								var groundGreen:FlxSprite = new FlxSprite(0, 0);
+								groundGreen = new FlxSprite(0, 0);
 								if (FlxG.save.data.cacheImages)
 								{
 									groundGreen.frames = FileCache.instance.fromSparrow('wrath_ground', 'ground');
@@ -991,7 +965,7 @@ class PlayState extends MusicBeatState
 							}
 
 							// wrath_crack
-							var crack:FlxSprite = new FlxSprite(0, 0);
+							crack = new FlxSprite(0, 0);
 							if (FlxG.save.data.cacheImages)
 							{
 								crack.frames = FileCache.instance.fromSparrow('wrath_crack', 'HellCrack');
@@ -1012,7 +986,7 @@ class PlayState extends MusicBeatState
 						}
 
 						// wrath_rocks
-						var rocks:FlxSprite = new FlxSprite(0, 0);
+						rocks = new FlxSprite(0, 0);
 						if (FlxG.save.data.cacheImages)
 						{
 							rocks.frames = FileCache.instance.fromSparrow('wrath_frontRocks', 'frontRocks');
@@ -1036,7 +1010,7 @@ class PlayState extends MusicBeatState
 						if (FlxG.save.data.flashing && (SONG.song == 'Spectral' || SONG.song == 'Ectospasm'))
 						{
 							// wrath_rocks
-							var rocksGreen:FlxSprite = new FlxSprite(0, 0);
+							rocksGreen = new FlxSprite(0, 0);
 							if (FlxG.save.data.cacheImages)
 							{
 								rocksGreen.frames = FileCache.instance.fromSparrow('wrath_frontRocks', 'frontRocks');
