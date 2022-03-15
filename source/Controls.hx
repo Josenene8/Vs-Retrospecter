@@ -1,5 +1,6 @@
 package;
 
+import flixel.input.gamepad.FlxGamepad;
 import flixel.FlxG;
 import flixel.input.FlxInput;
 import flixel.input.actions.FlxAction;
@@ -10,21 +11,11 @@ import flixel.input.actions.FlxActionSet;
 import flixel.input.gamepad.FlxGamepadButton;
 import flixel.input.gamepad.FlxGamepadInputID;
 import flixel.input.keyboard.FlxKey;
-
-import flixel.group.FlxGroup;
-import ui.Hitbox;
-import ui.FlxVirtualPad;
+#if mobileC
+import mobile.Hitbox;
+import mobile.FlxVirtualPad;
 import flixel.ui.FlxButton;
-import flixel.FlxG;
-import flixel.input.FlxInput;
-import flixel.input.actions.FlxAction;
-import flixel.input.actions.FlxActionInput;
-import flixel.input.actions.FlxActionInputDigital;
-import flixel.input.actions.FlxActionManager;
-import flixel.input.actions.FlxActionSet;
-import flixel.input.gamepad.FlxGamepadButton;
-import flixel.input.gamepad.FlxGamepadInputID;
-import flixel.input.keyboard.FlxKey;
+#end
 
 #if (haxe >= "4.0.0")
 enum abstract Action(String) to String from String
@@ -280,7 +271,7 @@ class Controls extends FlxActionSet
 		setKeyboardScheme(scheme, false);
 	}
 	#end
-
+	#if mobileC
 	public var trackedinputs:Array<FlxActionInput> = [];
 
 	public function addbutton(action:FlxActionDigital, button:FlxButton, state:FlxInputState) {
@@ -298,6 +289,39 @@ class Controls extends FlxActionSet
 		inline forEachBound(Control.LEFT, (action, state) -> addbutton(action, hitbox.buttonLeft, state));
 		inline forEachBound(Control.RIGHT, (action, state) -> addbutton(action, hitbox.buttonRight, state));	
 	}
+
+
+	public function removeFlxInput(Tinputs) {
+		for (action in this.digitalActions)
+		{
+			var i = action.inputs.length;
+
+			while (i-- > 0)
+			{
+				var input = action.inputs[i];
+				/*if (input.device == IFLXINPUT_OBJECT)
+					action.remove(input);*/
+
+				var x = Tinputs.length;
+				while (x-- > 0)
+					if (Tinputs[x] == input)
+						action.remove(input);
+			}
+		}
+	}
+
+
+
+	/*#if android
+	public function addAndroidBack() {
+		// fix this later
+
+		var BACK = #if (openfl >= "8.0.0") 0x4000010E #else 27 #end;
+		_back.addKey(BACK, JUST_RELEASED);
+		_back.addKey(BACK, JUST_PRESSED);
+		_back.addKey(BACK, PRESSED);
+	}
+	#end*/
 
 
 	public function setVirtualPad(virtualPad:FlxVirtualPad, ?DPad:FlxDPadMode, ?Action:FlxActionMode) {
@@ -323,7 +347,6 @@ class Controls extends FlxActionSet
 				inline forEachBound(Control.DOWN, (action, state) -> addbutton(action, virtualPad.buttonDown, state));
 				inline forEachBound(Control.LEFT, (action, state) -> addbutton(action, virtualPad.buttonLeft, state));
 				inline forEachBound(Control.RIGHT, (action, state) -> addbutton(action, virtualPad.buttonRight, state));
-
 			case NONE:
 		}
 
@@ -343,46 +366,9 @@ class Controls extends FlxActionSet
 			case NONE:
 		}
 	}
-
-
-	public function removeFlxInput(Tinputs) {
-		for (action in this.digitalActions)
-		{
-			var i = action.inputs.length;
-
-			while (i-- > 0)
-			{
-				var input = action.inputs[i];
-				/*if (input.device == IFLXINPUT_OBJECT)
-					action.remove(input);*/
-
-				var x = Tinputs.length;
-				while (x-- > 0)
-					if (Tinputs[x] == input)
-						action.remove(input);
-			}
-		}
-	}
-
-
-
-	#if android
-	public function addAndroidBack() {
-		// fix this later
-
-		/*
-		var BACK = #if (openfl >= "8.0.0") 0x4000010E #else 27 #end;
-		_back.addKey(BACK, JUST_RELEASED);
-		_back.addKey(BACK, JUST_PRESSED);
-		_back.addKey(BACK, PRESSED);
-		*/
-	}
-	#end	
-
+	#end
 	override function update()
-	{
 		super.update();
-	}
 
 	// inline
 	public function checkByName(name:Action):Bool
@@ -606,6 +592,7 @@ class Controls extends FlxActionSet
 		loadKeyBinds();
 		/*if (reset)
 			removeKeyboard();
+
 		keyboardScheme = scheme;
 		
 		#if (haxe >= "4.0.0")
@@ -683,8 +670,22 @@ class Controls extends FlxActionSet
 		//trace(FlxKey.fromString(FlxG.save.data.upBind));
 
 		removeKeyboard();
+		if (gamepadsAdded.length != 0)
+			removeGamepad();
 		KeyBinds.keyCheck();
-	
+
+		var buttons = new Map<Control,Array<FlxGamepadInputID>>();
+
+		buttons.set(Control.UP,[FlxGamepadInputID.fromString(FlxG.save.data.gpupBind)]);
+		buttons.set(Control.LEFT,[FlxGamepadInputID.fromString(FlxG.save.data.gpleftBind)]);
+		buttons.set(Control.DOWN,[FlxGamepadInputID.fromString(FlxG.save.data.gpdownBind)]);
+		buttons.set(Control.RIGHT,[FlxGamepadInputID.fromString(FlxG.save.data.gprightBind)]);
+		buttons.set(Control.ACCEPT,[FlxGamepadInputID.A]);
+		buttons.set(Control.BACK,[FlxGamepadInputID.B]);
+		buttons.set(Control.PAUSE,[FlxGamepadInputID.START]);
+
+		addGamepad(0,buttons);
+
 		inline bindKeys(Control.UP, [FlxKey.fromString(FlxG.save.data.upBind), FlxKey.UP]);
 		inline bindKeys(Control.DOWN, [FlxKey.fromString(FlxG.save.data.downBind), FlxKey.DOWN]);
 		inline bindKeys(Control.LEFT, [FlxKey.fromString(FlxG.save.data.leftBind), FlxKey.LEFT]);
@@ -711,6 +712,9 @@ class Controls extends FlxActionSet
 
 	public function addGamepad(id:Int, ?buttonMap:Map<Control, Array<FlxGamepadInputID>>):Void
 	{
+		if (gamepadsAdded.contains(id))
+			gamepadsAdded.remove(id);
+
 		gamepadsAdded.push(id);
 		
 		#if (haxe >= "4.0.0")
