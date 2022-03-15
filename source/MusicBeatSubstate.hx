@@ -1,7 +1,12 @@
 package;
 
 import Conductor.BPMChangeEvent;
+import flixel.FlxG;
 import flixel.FlxSubState;
+#if mobileC
+import mobile.FlxVirtualPad;
+import flixel.input.actions.FlxActionInput;
+#end
 
 class MusicBeatSubstate extends FlxSubState
 {
@@ -10,6 +15,9 @@ class MusicBeatSubstate extends FlxSubState
 		super();
 	}
 
+	private var lastBeat:Float = 0;
+	private var lastStep:Float = 0;
+
 	private var curStep:Int = 0;
 	private var curBeat:Int = 0;
 	private var controls(get, never):Controls;
@@ -17,40 +25,50 @@ class MusicBeatSubstate extends FlxSubState
 	inline function get_controls():Controls
 		return PlayerSettings.player1.controls;
 
+	#if mobileC
+	var _virtualpad:FlxVirtualPad;
+
+	var trackedinputs:Array<FlxActionInput> = [];
+
+	// adding virtualpad to state
+	public function addVirtualPad(?DPad:FlxDPadMode, ?Action:FlxActionMode) {
+		_virtualpad = new FlxVirtualPad(DPad, Action);
+		_virtualpad.alpha = 0.75;
+		add(_virtualpad);
+		controls.setVirtualPad(_virtualpad, DPad, Action);
+		trackedinputs = controls.trackedinputs;
+		controls.trackedinputs = [];
+
+		/*#if android
+		controls.addAndroidBack();
+		#end*/
+	}
+
+	override function destroy() {
+		controls.removeFlxInput(trackedinputs);
+
+		super.destroy();
+	}
+	/*#else
+	public function addVirtualPad(?DPad, ?Action){};*/
+	#end
+
 	override function update(elapsed:Float)
 	{
 		//everyStep();
-		var nextStep = updateCurStep();
+		var oldStep:Int = curStep;
 
-		if (nextStep >= 0)
-		{
-			if (nextStep > curStep)
-			{
-				for (i in curStep...nextStep)
-				{
-					curStep++;
-					updateBeat();
-					stepHit();
-				}
-			}
-			else if (nextStep < curStep)
-			{
-				//Song reset?
-				curStep = nextStep;
-				updateBeat();
-				stepHit();
-			}
-		}
+		updateCurStep();
+		curBeat = Math.floor(curStep / 4);
+
+		if (oldStep != curStep && curStep > 0)
+			stepHit();
+
 
 		super.update(elapsed);
 	}
 
-	private function updateBeat():Void
-	{
-		curBeat = Math.floor(curStep / 4);
-	}
-
-	private function updateCurStep():Int
+	private function updateCurStep():Void
 	{
 		var lastChange:BPMChangeEvent = {
 			stepTime: 0,
@@ -63,7 +81,7 @@ class MusicBeatSubstate extends FlxSubState
 				lastChange = Conductor.bpmChangeMap[i];
 		}
 
-		return lastChange.stepTime + Math.floor((Conductor.songPosition - lastChange.songTime) / Conductor.stepCrochet);
+		curStep = lastChange.stepTime + Math.floor((Conductor.songPosition - lastChange.songTime) / Conductor.stepCrochet);
 	}
 
 	public function stepHit():Void
