@@ -62,7 +62,7 @@ class OptionsMenu extends MusicBeatState
 		}
 
 		#if mobileC
-		var addVirtualPad;(UP_DOWN, A_B);
+		
 		#end
 		
 		super.create();
